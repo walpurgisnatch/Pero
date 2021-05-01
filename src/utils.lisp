@@ -2,8 +2,9 @@
 (defpackage :pero.utils
   (:use :cl)
   (:export :pathname-as-directory
-   :mkdir
-   :merge-dirs))
+           :mkdir
+           :merge-dirs
+           :mklist))
 
 (in-package :pero.utils)
 
@@ -37,3 +38,8 @@
 
 (defun merge-with-dir (child parent)
     (merge-pathnames child (pathname-as-directory parent)))
+
+(defun mklist (x)
+    (if (listp x)
+        x
+        (list x)))

@@ -5,7 +5,9 @@
     :depends-on ("alexandria"
                  "local-time")
     :components ((:module "src"
+                  :serial t                  
                   :components
-                  ((:file "pero"))))
+                  ((:file "utils")
+                   (:file "pero"))))
     :description "Logging library"
     :in-order-to ((test-op (test-op "pero/tests"))))

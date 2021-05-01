@@ -2,45 +2,60 @@
 (defpackage :pero
   (:use :cl)
   (:import-from :pero.utils
-   :mkdir
-                :merge-dirs)
+                :mkdir
+                :merge-dirs
+                :mklist)
   (:export :logger-setup
-   :write-log
-   :write-line-to
-   :write-dataset-to))
+           :write-log
+           :write-line-to
+           :write-dataset-to))
 
 (in-package :pero)
 
 (defvar *log-files* nil)
+(defvar *log-templates* nil)
 
-(defun log-path (log)
-    (cdr (assoc log *log-files*)))
+(defun create-template (log template) 
+    (push (cons log template) *log-templates*))
 
 (defun create-log-file (log path)
     (push (cons log path) *log-files*))
 
-(defun logger-setup (dir &rest files)
+(defun log-path (log)
+    (cdr (assoc log *log-files*)))
+
+(defun template-string (template)
+    (cdr (assoc template *log-templates*)))
+
+(defun logger-setup (dir &rest templates)
     (declare (type simple-string dir))
     (progn (mkdir dir)           
-           (loop for file in files do
-             (let ((log-path (mkdir (cdr file) dir)))
-                 (create-log-file (car file) log-path)))))
+           (loop for template in templates do
+             (parse-template dir template))))
 
-(defun create-message (msg)
-    (declare (type simple-string msg))
-    (concatenate 'string "~{" msg "~}"))
+(defun parse-template (dir templates)
+    (let ((log-path (mkdir (car templates) dir)))
+        (loop for template in (cdr templates) do
+          (progn 
+              (create-log-file (car template) log-path)
+              (create-template (car template) (cadr template))))))
 
-(defun write-log (file msg &rest args)
-    (declare (type simple-string msg))
-    (let ((pathname (log-path file))
-          (time (local-time:format-timestring nil (local-time:now) :format '(:day "." :month "." :year)))
-          (message (format nil (create-message msg) args)))
+(defun create-message (template args &key custom)
+    (let ((message (or custom (template-string template))))
+        (if args        
+            (format nil (concatenate 'string "~{" message "~}") args)
+            message)))
+
+(defun write-log (template &rest args)
+    (let ((pathname (log-path template))
+          (time (local-time:format-timestring nil (local-time:now) :format '(:day "." :month "." :year " " :hour ":" :min)))
+          (message (create-message template args)))
         (declare (type simple-string pathname time message))
         (with-open-file (stream pathname :direction :output :if-exists :append :if-does-not-exist :create)
             (write-line (format nil "~&[~a] ~a" time message) stream))))
 
 (defun write-line-to (file line)
-    (with-open-file (stream pathname :direction :output :if-exists :append :if-does-not-exist :create)
+    (with-open-file (stream file :direction :output :if-exists :append :if-does-not-exist :create)
         (write-line line stream)))
 
 (defun write-dataset-to (file &key hashvalue hashtable list (if-exists 'supersede))
