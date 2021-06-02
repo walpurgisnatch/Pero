@@ -2,15 +2,23 @@
 Logging library
 
 ## Usage
+Configure templates 
+```
+(pero:logger-setup "~/log-dir" '("folder/filename" (template-name1 "~a some stuff ~a") (template-name2 "second ~a")) 
+                               '("filename" (template-name3 "simple-log")))
+```
+Then call 
+```
+(pero:write-log 'template-name1 "firs arg" "second arg")
+```
 
 ## Installation
 Clone repo
 ```
 $ git clone https://github.com/walpurgisnatch/pero.git
 ```
-After it add path to pero.asd in your asdf registry 
+Then load pero with quicklisp
 ```
-(push "/path/to/pero" asdf:*central-registry*)
 (ql:quickload pero)
 ```
 
