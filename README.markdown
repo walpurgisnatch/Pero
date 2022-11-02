@@ -1,10 +1,14 @@
 # Pero
-Logging library
+Logging and text file operations library
 
 ## Usage
+
+### Will be updated in near future
+
 Configure templates 
 ```
-(pero:logger-setup "~/log-dir" '("folder/filename" (template-name1 "~a some stuff ~a") (template-name2 "second ~a")) 
+(pero:logger-setup "~/log-dir" '("folder/filename" (template-name1 "~a some stuff ~a") 
+                                                   (template-name2 "second ~a")) 
                                '("filename" (template-name3 "simple-log")))
 ```
 Then call 
