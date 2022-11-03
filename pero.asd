@@ -1,5 +1,5 @@
 (defsystem "pero"
-    :version "1.0.0"
+    :version "0.1.0"
     :author "Walpurgisnatch"
     :license "MIT"
     :depends-on ("alexandria"
@@ -9,5 +9,4 @@
                   :components
                   ((:file "utils")
                    (:file "pero"))))
-    :description "Logging library"
-    :in-order-to ((test-op (test-op "pero/tests"))))
+    :description "Logging and text file perations library")
