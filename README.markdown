@@ -7,13 +7,13 @@ Logging and text file operations library
 
 Configure templates 
 ```
-(pero:logger-setup "~/log-dir" '("folder/filename" (template-name1 "~a some stuff ~a") 
-                                                   (template-name2 "second ~a")) 
-                               '("filename" (template-name3 "simple-log")))
+(pero:logger-setup "~/log-dir")
+(pero:create-template "file" '(:error "there was an error - ~a")
+                             '(:simple "~a happened"))
 ```
 Then call 
 ```
-(pero:write-log 'template-name1 "firs arg" "second arg")
+(pero:write-log :error "something went wrong")
 ```
 
 ## Installation
@@ -26,15 +26,6 @@ Then load pero with quicklisp
 (ql:quickload pero)
 ```
 
-### With roswell
-```
-$ ros install walpurgisnatch/pero
-```
-
 ## License
 
 Licensed under the MIT License.
-
-## Copyright
-
-Copyright (c) 2021 Walpurgisnatch
