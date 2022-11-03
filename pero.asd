@@ -8,5 +8,6 @@
                   :serial t                  
                   :components
                   ((:file "utils")
+                   (:file "templates")
                    (:file "pero"))))
     :description "Logging and text file perations library")
