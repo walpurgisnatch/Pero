@@ -1,4 +1,6 @@
 # Pero
+[![Quicklisp](http://quickdocs.org/badge/pero.svg)](http://quickdocs.org/pero/)  
+  
 Logging and text file operations library
 
 ## Usage
