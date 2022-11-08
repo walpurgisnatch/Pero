@@ -17,13 +17,10 @@ Then call
 ```
 
 ## Installation
-Clone repo
+
+### Quicklisp
 ```
-$ git clone https://github.com/walpurgisnatch/pero.git
-```
-Then load pero with quicklisp
-```
-(ql:quickload pero)
+(ql:quickload :pero)
 ```
 
 ## License
