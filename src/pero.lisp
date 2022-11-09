@@ -13,14 +13,16 @@
            :current-time
            :write-log
            :write-line-to
-           :write-dataset-to))
+           :write-hashtable-to
+           :write-hashvalues-to
+           :write-list-to))
 
 (in-package :pero)
 
 (defvar *dir* nil)
 (defvar *log-templates* nil)
 
-(defun add-template (log template file) 
+(defun add-template (log template file)
   (push (list log template file) *log-templates*))
 
 (defun template-path (log)
@@ -61,18 +63,21 @@
   (with-open-file (stream file :direction :output :if-exists :append :if-does-not-exist :create)
     (write-line line stream)))
 
-(defun write-dataset-to (file &key hashvalue hashtable list (if-exists 'supersede))
-  (declare (optimize (speed 3) (safety 2))
-           (type simple-string file))
+(defun write-hashtable-to (file table &optional (format-string "~&~a: ~a"))
+  (declare (optimize (speed 3) (safety 2)))
   (with-open-file (output file :direction :output :if-exists if-exists :if-does-not-exist :create)
-    (cond (hashvalue
-           (maphash #'(lambda (key value) (declare (ignorable key))
-                        (write-line value output))
-                    hashvalue))
-          (hashtable
-           (maphash #'(lambda (key value) (write-line (format nil "~&~a: ~a" key value) output)) hashtable))
-          (list
-           (loop for item in list do
-             (write-line item output)))
-          (t nil))))
+    (maphash #'(lambda (key value) (write-line (format nil format-string key value) output)) hashtable)))
+
+(defun write-hashvalues-to (file table &optional (format-string "~&~a"))
+  (declare (optimize (speed 3) (safety 2)))
+  (with-open-file (output file :direction :output :if-exists if-exists :if-does-not-exist :create)
+    (maphash #'(lambda (key value) (declare (ignorable key))
+                 (write-line (format nil format-string value) output))
+             table)))
+
+(defun write-list-to (file list &optional (format-string "~&~a"))
+  (declare (optimize (speed 3) (safety 2)))
+  (with-open-file (output file :direction :output :if-exists if-exists :if-does-not-exist :create)
+    (loop for item in list do
+      (write-line (format nil format-string item) output))))
     
